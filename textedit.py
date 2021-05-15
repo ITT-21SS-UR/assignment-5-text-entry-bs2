@@ -3,19 +3,64 @@
 
 import sys
 from PyQt5 import QtGui, QtCore, QtWidgets
-import re
 
 class SuperText(QtWidgets.QTextEdit):
  
-    def __init__(self, example_text):
+    def __init__(self, sentence):
         super(SuperText, self).__init__()
-        self.numbers=[]
-        self.template_doc = ""
-        self.setHtml(example_text)
-        self.prev_content = ""
-        self.generate_template()
-        self.render_template()
+        self.timer = QtCore.QTime()
+        self.started = False
+        self.input = ""
+        self.setStartText(sentence)
         self.initUI()
+        print("Event,time(ms),content")
+
+    def setStartText(self, text):
+        cur = self.textCursor()
+        self.startText = f'<h3>{text}</h3><p>(Press "Enter" to start)</p>'
+        self.setHtml(self.startText)
+        self.setTextCursor(cur)
+
+    def updateUI(self):
+        cur = self.textCursor()
+        text = self.startText + f'<h3>{self.input}</h3>'
+        self.setHtml(text)
+        self.setTextCursor(cur)
+
+    def keyPressEvent(self, e: QtGui.QKeyEvent) -> None:  
+        self.onStart(e)  
+        if self.started:
+            self.onKeyPressed(e)
+
+    def onKeyPressed(self, ev):
+        self.log("keyPressed", str(self.timer.elapsed()), ev.key())
+        # on "remove"
+        if ev.key() == 16777219:
+            self.input = self.input[:-1]
+        else:
+            self.input += ev.text()
+        # on "space"
+        if ev.key() == 32:
+            self.onWordTyped()
+        # on "dot"
+        if ev.key() == 46:
+            self.onWordTyped()
+            self.onSentenceTyped()
+        self.updateUI()
+
+    def onWordTyped(self):
+        elapsed = self.timer.elapsed()
+        word = self.input.split()[-1]
+        if word[-1] == ".":
+            word = word[:-1]
+        self.log("wordTyped", str(elapsed), word)
+
+    def onSentenceTyped(self):
+        elapsed = self.timer.elapsed()
+        self.log("sentenceTyped", str(elapsed), self.input)
+        self.log("testFinished", str(elapsed), self.input)
+        sys.exit(1)
+
         
     def initUI(self):      
         self.setGeometry(0, 0, 400, 400)
@@ -24,37 +69,15 @@ class SuperText(QtWidgets.QTextEdit):
         self.setMouseTracking(True)
         self.show()
 
-    def wheelEvent(self, ev):
-        super(SuperText, self).wheelEvent(ev)
-        self.generate_template()
-        self.render_template()
-        anc = self.anchorAt(ev.pos())
-        if (anc):
-            self.change_value(anc, ev.angleDelta().y())
+    def onStart(self, ev):
+        if not self.started:
+            if ev.key() == 16777220:
+                self.started = True
+                self.timer.start()
 
-    def change_value(self, val_id, amount):
-        self.numbers[int(str(val_id))] += amount / 120 
-        self.render_template()
+    def log(self, eventType, time, content):
+        print(f'{eventType},{time},{content}')
         
-    def render_template(self):
-        cur = self.textCursor()
-        doc = self.template_doc 
-        for num_id, num in enumerate(self.numbers):
-            doc = doc.replace('$' + str(num_id) + '$', '%d' % (num))
-        self.setHtml(doc)
-        self.setTextCursor(cur)
-
-    def generate_template(self):
-        content = str(self.toPlainText())
-        numbers = list(re.finditer(" -?[0-9]+", content))
-        numbers = [int(n.group()) for n in numbers]
-        self.numbers = numbers
-        if len(numbers) == 0:
-            self.template_doc = content
-            return
-        for num_id in range(len(numbers)):
-            content = re.sub(" " + str(numbers[num_id])  , " <a href='%d'>$%d$</a>" % (num_id, num_id), content, count=1)
-        self.template_doc = content
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
