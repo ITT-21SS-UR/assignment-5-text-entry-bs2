@@ -1,6 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+# the script was written by Michael Schmidt und Erik Blank
+
 import sys
 from PyQt5 import QtGui, QtCore, QtWidgets
 
