@@ -3,6 +3,17 @@
 
 # the script was written by Michael Schmidt und Erik Blank
 
+"""
+This program meassures the speed of text entry for following events: 
+    - key pressed
+    - word typed
+    - sentence typed
+    - programm finished
+The user can start the program by hitting "enter".
+Afterwards the sentence can be typed
+and the program stops when the sentence was typed.
+"""
+
 import sys
 from PyQt5 import QtGui, QtCore, QtWidgets
 
@@ -17,9 +28,10 @@ class SuperText(QtWidgets.QTextEdit):
         self.initUI()
         print("Event,time(ms),content")
 
+    # sets starting text and mouse cursor
     def setStartText(self, text):
         cur = self.textCursor()
-        self.startText = f'<h3>{text}</h3><p>(Press "Enter" to start)</p>'
+        self.startText = f'<p>Type the following sentence:</p><h3>{text}</h3><p>(Press "Enter" to start)</p>'
         self.setHtml(self.startText)
         self.setTextCursor(cur)
 

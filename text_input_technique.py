@@ -3,6 +3,18 @@
 
 # the script was written by Michael Schmidt und Erik Blank
 
+"""
+This program meassures the speed of text entry for following events: 
+    - key pressed
+    - word typed
+    - sentence typed
+    - programm finished
+The user can start the program by hitting "enter".
+Afterwards the sentence can be typed
+and the program stops when the sentence was typed.
+Autocompletion is provided by pressing "enter" while typing the word.
+"""
+
 import sys
 from PyQt5 import QtGui, QtCore, QtWidgets
 
@@ -11,6 +23,7 @@ class SuperText(QtWidgets.QTextEdit):
     def __init__(self, sentence):
         super(SuperText, self).__init__()
         self.sentence = sentence
+        # add QCompleter
         self.completer = QtWidgets.QCompleter(sentence.split())
         self.timer = QtCore.QTime()
         self.started = False
@@ -22,7 +35,7 @@ class SuperText(QtWidgets.QTextEdit):
 
     def setStartText(self, text):
         cur = self.textCursor()
-        self.startText = f'<h3>{text}</h3><p>(Press "Enter" to start)</p>'
+        self.startText = f'<p>Type the following sentence:</p><h3>{text}</h3><p>You can use autocompletion by pressing "Enter"</p><p>(Press "Enter" to start)</p>'
         self.setHtml(self.startText)
         self.setTextCursor(cur)
 
@@ -32,6 +45,7 @@ class SuperText(QtWidgets.QTextEdit):
         if self.autoCompletion == "":
             text = self.startText + f'<h3>{self.input}</h3>'
         else:
+            # adds the autocompletion suggestion in grey
             text = self.startText + f'<h3>{self.input}<span style="color:grey">{self.autoCompletion}</span></h3>'
         self.setHtml(text)
         self.setTextCursor(cur)
@@ -63,16 +77,19 @@ class SuperText(QtWidgets.QTextEdit):
         self.setAutoCompletion() 
         self.updateUI()
 
+    # sets the autocompletion suggest
     def setAutoCompletion(self):
         if len(self.input.split()) > 0:
             prefix = self.input.split()[-1]
             self.completer.setCompletionPrefix(prefix)
             word = self.completer.currentCompletion()
             if word != "":
+                # remove dot for last word in sentence
                 if word[-1] == ".":
                     word = word[:-1]
             self.autoCompletion = word[len(prefix):]
 
+    # updated the UI if autocompletion is used
     def autoComplete(self):
         self.input += self.autoCompletion
         self.autoCompletion = ""
