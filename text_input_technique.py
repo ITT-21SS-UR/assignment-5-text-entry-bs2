@@ -17,15 +17,22 @@ Autocompletion is provided by pressing "enter" while typing the word.
 
 import sys
 from PyQt5 import QtGui, QtCore, QtWidgets
+import pandas as pd
+
+FIELDS = ["id", "event", "time(ms)", "content", "mode"]
 
 class SuperText(QtWidgets.QTextEdit):
  
-    def __init__(self, sentence):
+    def __init__(self, sentence, id):
         super(SuperText, self).__init__()
+        self.id = id
+        self.df = pd.DataFrame(columns=FIELDS)
         self.sentence = sentence
         # add QCompleter
         self.completer = QtWidgets.QCompleter(sentence.split())
-        self.timer = QtCore.QTime()
+        self.timerKey = QtCore.QTime()
+        self.timerWord = QtCore.QTime()
+        self.timerSentence = QtCore.QTime()
         self.started = False
         self.input = ""
         self.autoCompletion = ""
@@ -57,7 +64,8 @@ class SuperText(QtWidgets.QTextEdit):
             self.onKeyPressed(e)
 
     def onKeyPressed(self, ev):
-        self.log("keyPressed", str(self.timer.elapsed()), ev.key())
+        self.log("keyPressed", str(self.timerKey.elapsed()), ev.key())
+        self.timerKey.start()
         # on "remove"
         if ev.key() == 16777219:
             self.input = self.input[:-1]
@@ -97,16 +105,18 @@ class SuperText(QtWidgets.QTextEdit):
 
 
     def onWordTyped(self):
-        elapsed = self.timer.elapsed()
+        elapsed = self.timerWord.elapsed()
         word = self.input.split()[-1]
         if word[-1] == ".":
             word = word[:-1]
         self.log("wordTyped", str(elapsed), word)
+        self.timerWord.start()
 
     def onSentenceTyped(self):
-        elapsed = self.timer.elapsed()
-        self.log("sentenceTyped", str(elapsed), self.input)
-        self.log("testFinished", str(elapsed), self.input)
+        elapsed = self.timerSentence.elapsed()
+        self.log("sentenceTyped", str(elapsed), self.input[1:])
+        self.log("testFinished", str(elapsed), self.input[1:])
+        self.df = self.df.to_csv(f'./result_1_{self.id}.csv', index=False)
         sys.exit(1)
 
         
@@ -121,15 +131,29 @@ class SuperText(QtWidgets.QTextEdit):
         if not self.started:
             if ev.key() == 16777220:
                 self.started = True
-                self.timer.start()
+                self.timerKey.start()
+                self.timerWord.start()
+                self.timerSentence.start()
 
     def log(self, eventType, time, content):
         print(f'{eventType},{time},{content}')
+        self.df = self.df.append({
+            "id": self.id,
+            "event": eventType,
+            "time(ms)": time,
+            "content": content,
+            "mode": 1
+        }, ignore_index=True)
         
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
-    super_text = SuperText("An 123 Tagen kamen 1342 Personen.")
+    if len(sys.argv) != 2:
+        print("usage: python3 <scriptname> <userID>")
+        sys.exit(1)
+    else:
+        id = str(sys.argv[1])
+    super_text = SuperText("An 123 Tagen kamen 1342 Personen.", id)
     sys.exit(app.exec_())
 
 if __name__ == '__main__':

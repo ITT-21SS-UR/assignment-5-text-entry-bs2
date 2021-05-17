@@ -1,0 +1,36 @@
+id,event,time(ms),content,mode
+3,keyPressed,0,16777220,1
+3,keyPressed,77,16777248,1
+3,keyPressed,104,65,1
+3,keyPressed,89,78,1
+3,keyPressed,186,32,1
+3,wordTyped,508,An,1
+3,keyPressed,122,49,1
+3,keyPressed,113,50,1
+3,keyPressed,57,51,1
+3,keyPressed,78,32,1
+3,wordTyped,431,123,1
+3,keyPressed,86,16777248,1
+3,keyPressed,94,84,1
+3,keyPressed,242,16777220,1
+3,keyPressed,321,32,1
+3,wordTyped,771,Tagen,1
+3,keyPressed,218,75,1
+3,keyPressed,117,65,1
+3,keyPressed,132,16777220,1
+3,keyPressed,402,32,1
+3,wordTyped,899,kamen,1
+3,keyPressed,187,49,1
+3,keyPressed,108,51,1
+3,keyPressed,149,16777220,1
+3,keyPressed,459,32,1
+3,wordTyped,923,1342,1
+3,keyPressed,356,16777248,1
+3,keyPressed,95,80,1
+3,keyPressed,172,69,1
+3,keyPressed,120,82,1
+3,keyPressed,141,16777220,1
+3,keyPressed,291,46,1
+3,wordTyped,1256,Personen,1
+3,sentenceTyped,4810,n 123 Tagen kamen 1342 Personen.,1
+3,testFinished,4810,n 123 Tagen kamen 1342 Personen.,1
