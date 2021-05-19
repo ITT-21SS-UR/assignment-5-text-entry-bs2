@@ -1,10 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# the script was written by Michael Schmidt und Erik Blank
+# the script was written by Erik Blank
 
 """
-This program meassures the speed of text entry for following events: 
+This program meassures the speed of text
+entry for following events:
     - key pressed
     - word typed
     - sentence typed
@@ -21,8 +22,9 @@ import pandas as pd
 
 FIELDS = ["id", "event", "time(ms)", "content", "mode"]
 
+
 class SuperText(QtWidgets.QTextEdit):
- 
+
     def __init__(self, sentence, id):
         super(SuperText, self).__init__()
         self.id = id
@@ -42,7 +44,10 @@ class SuperText(QtWidgets.QTextEdit):
 
     def setStartText(self, text):
         cur = self.textCursor()
-        self.startText = f'<p>Type the following sentence:</p><h3>{text}</h3><p>You can use autocompletion by pressing "Enter"</p><p>(Press "Enter" to start)</p>'
+        self.startText = f"""<p>Type the following
+        sentence:</p><h3>{text}</h3><p>You can use
+        autocompletion by pressing "Enter"</p>
+        <p>(Press "Enter" to start)</p>"""
         self.setHtml(self.startText)
         self.setTextCursor(cur)
 
@@ -53,13 +58,13 @@ class SuperText(QtWidgets.QTextEdit):
             text = self.startText + f'<h3>{self.input}</h3>'
         else:
             # adds the autocompletion suggestion in grey
-            text = self.startText + f'<h3>{self.input}<span style="color:grey">{self.autoCompletion}</span></h3>'
+            text = self.startText + \
+                f'<h3>{self.input}<span style="color:grey">{self.autoCompletion}</span></h3>'
         self.setHtml(text)
         self.setTextCursor(cur)
 
-
-    def keyPressEvent(self, e: QtGui.QKeyEvent) -> None:  
-        self.onStart(e)  
+    def keyPressEvent(self, e: QtGui.QKeyEvent) -> None:
+        self.onStart(e)
         if self.started:
             self.onKeyPressed(e)
 
@@ -82,7 +87,7 @@ class SuperText(QtWidgets.QTextEdit):
         if ev.key() == 46:
             self.onWordTyped()
             self.onSentenceTyped()
-        self.setAutoCompletion() 
+        self.setAutoCompletion()
         self.updateUI()
 
     # sets the autocompletion suggest
@@ -103,7 +108,6 @@ class SuperText(QtWidgets.QTextEdit):
         self.autoCompletion = ""
         self.updateUI()
 
-
     def onWordTyped(self):
         elapsed = self.timerWord.elapsed()
         word = self.input.split()[-1]
@@ -119,7 +123,6 @@ class SuperText(QtWidgets.QTextEdit):
         self.df = self.df.to_csv(f'./result_1_{self.id}.csv', index=False)
         sys.exit(1)
 
-        
     def initUI(self):
         self.setGeometry(0, 0, 400, 400)
         self.setWindowTitle('SuperText')
@@ -144,7 +147,7 @@ class SuperText(QtWidgets.QTextEdit):
             "content": content,
             "mode": 1
         }, ignore_index=True)
-        
+
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
@@ -153,8 +156,9 @@ def main():
         sys.exit(1)
     else:
         id = str(sys.argv[1])
-    super_text = SuperText("An 123 Tagen kamen 1342 Personen.", id)
+    super_text = SuperText("The five boxing wizards jump very quickly.", id)
     sys.exit(app.exec_())
+
 
 if __name__ == '__main__':
     main()

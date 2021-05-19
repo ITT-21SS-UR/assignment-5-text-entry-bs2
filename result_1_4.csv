@@ -1,0 +1,36 @@
+id,event,time(ms),content,mode
+4,keyPressed,1,16777220,1
+4,keyPressed,242,16777248,1
+4,keyPressed,276,84,1
+4,keyPressed,115,72,1
+4,keyPressed,149,69,1
+4,keyPressed,103,32,1
+4,wordTyped,958,The,1
+4,keyPressed,253,70,1
+4,keyPressed,563,16777220,1
+4,keyPressed,447,32,1
+4,wordTyped,1324,five,1
+4,keyPressed,70,66,1
+4,keyPressed,39,79,1
+4,keyPressed,253,16777220,1
+4,keyPressed,477,32,1
+4,wordTyped,863,boxing,1
+4,keyPressed,246,87,1
+4,keyPressed,136,73,1
+4,keyPressed,295,16777220,1
+4,keyPressed,460,32,1
+4,wordTyped,1169,wizards,1
+4,keyPressed,162,74,1
+4,keyPressed,353,16777220,1
+4,keyPressed,495,32,1
+4,wordTyped,1031,jump,1
+4,keyPressed,101,86,1
+4,keyPressed,398,16777220,1
+4,keyPressed,461,32,1
+4,wordTyped,1006,very,1
+4,keyPressed,78,81,1
+4,keyPressed,443,16777220,1
+4,keyPressed,306,46,1
+4,wordTyped,813,quickly,1
+4,sentenceTyped,7323,he five boxing wizards jump very quickly.,1
+4,testFinished,7323,he five boxing wizards jump very quickly.,1

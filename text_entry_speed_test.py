@@ -1,10 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# the script was written by Michael Schmidt und Erik Blank
+# the script was written by Erik Blank
 
 """
-This program meassures the speed of text entry for following events: 
+This program meassures the speed of text
+entry for following events:
     - key pressed
     - word typed
     - sentence typed
@@ -18,10 +19,11 @@ import sys
 from PyQt5 import QtGui, QtCore, QtWidgets
 import pandas as pd
 
-FIELDS = ["id","event", "time(ms)", "content", "mode"]
+FIELDS = ["id", "event", "time(ms)", "content", "mode"]
+
 
 class SuperText(QtWidgets.QTextEdit):
- 
+
     def __init__(self, sentence, id):
         super(SuperText, self).__init__()
         self.id = id
@@ -48,8 +50,8 @@ class SuperText(QtWidgets.QTextEdit):
         self.setHtml(text)
         self.setTextCursor(cur)
 
-    def keyPressEvent(self, e: QtGui.QKeyEvent) -> None:  
-        self.onStart(e)  
+    def keyPressEvent(self, e: QtGui.QKeyEvent) -> None:
+        self.onStart(e)
         if self.started:
             self.onKeyPressed(e)
 
@@ -85,8 +87,7 @@ class SuperText(QtWidgets.QTextEdit):
         self.df = self.df.to_csv(f'./result_0_{self.id}.csv', index=False)
         sys.exit(1)
 
-        
-    def initUI(self):      
+    def initUI(self):
         self.setGeometry(0, 0, 400, 400)
         self.setWindowTitle('SuperText')
         self.setFocusPolicy(QtCore.Qt.StrongFocus)
@@ -110,7 +111,7 @@ class SuperText(QtWidgets.QTextEdit):
             "content": content,
             "mode": 0
         }, ignore_index=True)
-        
+
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
@@ -119,8 +120,9 @@ def main():
         sys.exit(1)
     else:
         id = str(sys.argv[1])
-    super_text = SuperText("An 123 Tagen kamen 1342 Personen.", id)
+    super_text = SuperText("The five boxing wizards jump very quickly.", id)
     sys.exit(app.exec_())
+
 
 if __name__ == '__main__':
     main()
